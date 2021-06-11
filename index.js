@@ -32,6 +32,7 @@ let image = document.querySelector(".image-container");
     <img src="${imageArray[0].previewImage}" 
      alt='No Image'>
     <p> ${ imageArray[0].title} </p>`;
+
 imageArray.forEach((item, index) => {
   let sidebarItem = document.createElement("div");
   sidebarItem.classList = "sidebarItem";
@@ -40,17 +41,38 @@ imageArray.forEach((item, index) => {
       <img src="${item.previewImage}"
                     alt="No Image">
                     <p> ${item.title} </p>`;
+  if(index==0)
+  sidebarItem.classList.add("select");
   sidebar = document.querySelector(".sidebar");
   sidebar.appendChild(sidebarItem);
   sidebarItem.addEventListener("click", (event) => {
-    let element = document.getElementById(`${currentIndex}`);
-    element.classList.remove("select");
-    currentIndex = index;
-    sidebarItem.classList.add("select");
-    let image = document.querySelector(".image-container");
-    image.innerHTML = `
-    <img src="${item.previewImage}" 
-     alt='No Image'>
-    <p> ${ item.title} </p>`;
+    ChangeImage(item,index);
   });
 });
+
+function ChangeImage(item,index){
+  let element = document.getElementById(`${currentIndex}`);
+  element.classList.remove("select");
+  currentIndex = index;
+  let sidebarItem = document.getElementById(`${currentIndex}`);
+  sidebarItem.classList.add("select");
+  let image = document.querySelector(".image-container");
+  image.innerHTML = `
+  <img src="${item.previewImage}" 
+   alt='No Image'>
+  <p> ${ item.title} </p>`;
+}
+
+document.onkeydown = function (event){
+  let current;
+  switch(event.keyCode){
+    case 38:
+      current = (currentIndex!=0)?currentIndex-1:currentIndex;
+      ChangeImage(imageArray[current],current)
+      break;
+    case 40:
+      current = (currentIndex+1==imageArray.length)?currentIndex : currentIndex+1;
+      ChangeImage(imageArray[current],current)
+      break;
+  }
+}
